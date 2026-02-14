@@ -1,6 +1,20 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import SceneBackground from './SceneBackground'
 import type { GameState } from '../App'
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.2 },
+  },
+}
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+}
 
 export default function GameSetup({
   state,
@@ -25,92 +39,151 @@ export default function GameSetup({
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
+    <div className="relative min-h-screen flex items-center justify-center p-4 sm:p-6">
+      <SceneBackground />
+
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-lg bg-gray-800/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 sm:p-10 border border-gray-700"
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="relative z-10 w-full max-w-md glass-card-elevated p-8 sm:p-10"
       >
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-center mb-2 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent">
-          Song Battle Royale
-        </h1>
-        <p className="text-center text-gray-400 mb-8 text-lg">
-          Pick songs. Battle it out. Crown a champion.
-        </p>
-
-        <div className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Player 1 Name
-            </label>
-            <input
-              type="text"
-              value={p1Name}
-              onChange={e => setP1Name(e.target.value)}
-              placeholder="Enter name"
-              className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none text-white placeholder-gray-500"
-            />
+        {/* Logo / Title */}
+        <motion.div variants={item} className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/20 mb-5">
+            <svg viewBox="0 0 24 24" className="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18V5l12-2v13" />
+              <circle cx="6" cy="18" r="3" />
+              <circle cx="18" cy="16" r="3" />
+            </svg>
           </div>
+          <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight gradient-text-hero mb-3">
+            Song Battle Royale
+          </h1>
+          <p className="text-sm sm:text-base text-white/40 tracking-wide">
+            Pick songs. Battle it out. Crown the champion.
+          </p>
+        </motion.div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Player 2 Name
+        {/* Player inputs */}
+        <div className="space-y-5 mb-6">
+          <motion.div variants={item}>
+            <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-2">
+              Player 1
             </label>
-            <input
-              type="text"
-              value={p2Name}
-              onChange={e => setP2Name(e.target.value)}
-              placeholder="Enter name"
-              className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none text-white placeholder-gray-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Number of Categories
-            </label>
-            <select
-              value={numCategories}
-              onChange={e => setNumCategories(Number(e.target.value))}
-              className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-lg focus:border-blue-500 outline-none text-white"
-            >
-              <option value={1}>1 (Quick game)</option>
-              <option value={3}>3 (Standard)</option>
-              <option value={5}>5 (Extended)</option>
-              <option value={7}>7 (Marathon)</option>
-            </select>
-          </div>
-
-          <div className="pt-2">
-            <label className="flex items-center justify-center space-x-3 cursor-pointer">
+            <div className="relative">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-blue-500/20 border border-blue-400/30 flex items-center justify-center">
+                <span className="text-xs font-bold text-blue-400">1</span>
+              </div>
               <input
-                type="checkbox"
-                checked={state.splitMode}
-                onChange={e =>
-                  setState(s => ({ ...s, splitMode: e.target.checked }))
-                }
-                className="w-5 h-5 rounded border-gray-600 text-purple-600 focus:ring-purple-500"
+                type="text"
+                value={p1Name}
+                onChange={e => setP1Name(e.target.value)}
+                placeholder="Enter name"
+                className="w-full pl-14 pr-4 py-4 glass-input text-white placeholder-white/25 text-base"
               />
-              <span className="text-lg text-gray-200">
-                Enable Split-Screen Mode (open two tabs)
-              </span>
-            </label>
-            <p className="text-sm text-gray-400 mt-1 text-center">
-              One tab per player — suspense when opponent picks!
-            </p>
-          </div>
+            </div>
+          </motion.div>
 
+          <motion.div variants={item}>
+            <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-2">
+              Player 2
+            </label>
+            <div className="relative">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-pink-500/20 border border-pink-400/30 flex items-center justify-center">
+                <span className="text-xs font-bold text-pink-400">2</span>
+              </div>
+              <input
+                type="text"
+                value={p2Name}
+                onChange={e => setP2Name(e.target.value)}
+                placeholder="Enter name"
+                className="w-full pl-14 pr-4 py-4 glass-input text-white placeholder-white/25 text-base"
+              />
+            </div>
+          </motion.div>
+
+          {/* Categories selector */}
+          <motion.div variants={item}>
+            <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-2">
+              Categories
+            </label>
+            <div className="grid grid-cols-4 gap-2">
+              {[
+                { val: 1, label: '1', sub: 'Quick' },
+                { val: 3, label: '3', sub: 'Standard' },
+                { val: 5, label: '5', sub: 'Extended' },
+                { val: 7, label: '7', sub: 'Marathon' },
+              ].map(opt => (
+                <button
+                  key={opt.val}
+                  onClick={() => setNumCategories(opt.val)}
+                  className={`py-3 rounded-xl text-center transition-all duration-200 ${
+                    numCategories === opt.val
+                      ? 'bg-purple-500/20 border border-purple-400/40 ring-glow-purple text-white'
+                      : 'bg-white/[0.03] border border-white/[0.06] text-white/50 hover:bg-white/[0.06] hover:text-white/70'
+                  }`}
+                >
+                  <div className="text-lg font-bold">{opt.label}</div>
+                  <div className="text-[10px] uppercase tracking-wider opacity-60">
+                    {opt.sub}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Split mode */}
+          <motion.div variants={item}>
+            <button
+              onClick={() =>
+                setState(s => ({ ...s, splitMode: !s.splitMode }))
+              }
+              className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all duration-200 ${
+                state.splitMode
+                  ? 'bg-cyan-500/10 border border-cyan-400/30'
+                  : 'bg-white/[0.03] border border-white/[0.06]'
+              }`}
+            >
+              <div
+                className={`w-10 h-6 rounded-full relative transition-colors duration-200 ${
+                  state.splitMode ? 'bg-cyan-500' : 'bg-white/10'
+                }`}
+              >
+                <div
+                  className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 ${
+                    state.splitMode ? 'translate-x-5' : 'translate-x-1'
+                  }`}
+                />
+              </div>
+              <div className="text-left">
+                <div
+                  className={`text-sm font-medium ${
+                    state.splitMode ? 'text-cyan-300' : 'text-white/60'
+                  }`}
+                >
+                  Split-Screen Mode
+                </div>
+                <div className="text-xs text-white/30">
+                  One tab per player for extra suspense
+                </div>
+              </div>
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Start button */}
+        <motion.div variants={item}>
           <motion.button
-            whileTap={{ scale: 0.95 }}
-            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            whileHover={{ scale: 1.01 }}
             onClick={startGame}
             disabled={!p1Name.trim() || !p2Name.trim()}
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white text-xl font-bold py-5 rounded-2xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="glass-btn w-full py-4 text-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-glow-purple disabled:shadow-none disabled:from-gray-700 disabled:to-gray-700"
           >
-            Start Battle!
+            Start Battle
           </motion.button>
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   )
